@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+echo "Getting speedtest metrics..."
+data=$(speedtest-cli)
+subject=$(echo "$data" | awk '/Upload|Download/' | paste -s -d ", " -  )
+for i in $(echo $1 | sed "s/,/ /g")
+do
+    echo "Sending mail with $subject to $i"
+    echo "$data" | mail -s "$subject" $i
+done
