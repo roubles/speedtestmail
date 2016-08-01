@@ -22,7 +22,7 @@ $ speedtestmail someone@gmail.com,someoneelse@gmail.com
 # Cron usage
 I run it once every hour as follows:
 ```
-0 * * * * speedtestmail someone@gmail.com,someoneelse@gmail.com
+0 * * * * /usr/local/bin/speedtestmail someone@gmail.com,someoneelse@gmail.com > /dev/null
 ```
 
 # Uninstall
