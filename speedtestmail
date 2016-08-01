@@ -1,6 +1,32 @@
 #!/usr/bin/env bash
 
+HELP=0
+while [[ $# -gt 0 ]]
+do
+key="$1"
+case $key in
+    --help|-h)
+    HELP=1
+    ;;
+    *)
+            # unknown option
+    ;;
+esac
+shift # past argument or value
+done
+
 echoerr() { echo "$@" 1>&2; }
+
+if [[ $HELP -eq 1 ]]; then
+    echo "Usage: speedtestmail <comma separated email addresses>"
+    echo ""
+    echo ""
+    echo "examples:"
+    echo "        $ speedtestmail someone@gmail.com"
+    echo "        $ speedtestmail someone@gmail.com,someoneelse@gmail.com"
+    exit 0
+fi
+
 if [ ! -e /usr/local/bin/speedtest-cli ]; then
     echoerr "Please install speedtest-cli from https://github.com/sivel/speedtest-cli"
     exit 1
