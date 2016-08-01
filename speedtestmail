@@ -9,7 +9,7 @@ case $key in
     HELP=1
     ;;
     *)
-            # unknown option
+    EMAILS=$1
     ;;
 esac
 shift # past argument or value
@@ -42,15 +42,15 @@ updown=$(echo "$data" | awk '/Upload|Download/' | paste -s -d ", " -  )
 echo "Speed: $updown"
 
 ipline=$(echo "$data" | grep "Testing from")
-ipline=${ipline##* } #Extract IP from 
+ipline=${ipline##* } #Extract IP from IP Line
 ip=${ipline%%...} 
 echo "External IP: $ip"
 
-subject="$hostname$ip: $updown"
+subject="$hostname$ip>>> $updown"
 
-for i in $(echo $1 | sed "s/,/ /g")
+for EMAIL in $(echo $EMAILS | sed "s/,/ /g")
 do
-    echo "Sending mail with $subject to $i"
-    echo "$data" | mail -s "$subject" $i
+    echo "Sending mail with $subject to $EMAIL"
+    echo "$data" | mail -s "$subject" $EMAIL
 done
 exit 0
