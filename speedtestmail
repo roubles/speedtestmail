@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+
 HELP=0
 while [[ $# -gt 0 ]]
 do
@@ -32,8 +34,8 @@ if [ ! -e /usr/local/bin/speedtest-cli ]; then
     exit 1
 fi
 
-echo "Getting speedtest metrics..."
-data=$("/usr/local/bin/speedtest-cli")
+echo "Getting speedtest-cli metrics..."
+data=$("speedtest-cli")
 
 hostname=$(hostname)
 echo "Hostname: $hostname"
@@ -41,12 +43,15 @@ echo "Hostname: $hostname"
 updown=$(echo "$data" | awk '/Upload|Download/' | paste -s -d ", " -  )
 echo "Speed: $updown"
 
-ipline=$(echo "$data" | grep "Testing from")
-ipline=${ipline##* } #Extract IP from IP Line
-ip=${ipline%%...} 
+DIG_CMD=$(type -p dig) || { echo >&2 "dig not installed - can't get external IP. "; }
+if [ ! -z "$DIG_CMD" ]; then
+    ip=$($DIG_CMD +short myip.opendns.com @resolver1.opendns.com)
+else
+    ip="UNKNOWN"
+fi
 echo "External IP: $ip"
 
-subject="$hostname$ip>>> $updown"
+subject="$hostname($ip): $updown"
 
 for EMAIL in $(echo $EMAILS | sed "s/,/ /g")
 do
