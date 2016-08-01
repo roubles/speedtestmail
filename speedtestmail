@@ -53,3 +53,4 @@ do
     echo "Sending mail with $subject to $i"
     echo "$data" | mail -s "$subject" $i
 done
+exit 0
